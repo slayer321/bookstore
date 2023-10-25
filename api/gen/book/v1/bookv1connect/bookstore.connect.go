@@ -50,8 +50,8 @@ const (
 // InventoryServiceClient is a client for the book.v1.InventoryService service.
 type InventoryServiceClient interface {
 	AddBooks(context.Context, *connect.Request[v1.Book]) (*connect.Response[v1.AddStatus], error)
-	GetBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.Book], error)
-	DeleteBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.AddStatus], error)
+	GetBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.Book], error)
+	DeleteBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.AddStatus], error)
 	UpdateBooks(context.Context, *connect.Request[v1.Book]) (*connect.Response[v1.AddStatus], error)
 }
 
@@ -70,12 +70,12 @@ func NewInventoryServiceClient(httpClient connect.HTTPClient, baseURL string, op
 			baseURL+InventoryServiceAddBooksProcedure,
 			opts...,
 		),
-		getBooks: connect.NewClient[v1.BookID, v1.Book](
+		getBooks: connect.NewClient[v1.BookTitle, v1.Book](
 			httpClient,
 			baseURL+InventoryServiceGetBooksProcedure,
 			opts...,
 		),
-		deleteBooks: connect.NewClient[v1.BookID, v1.AddStatus](
+		deleteBooks: connect.NewClient[v1.BookTitle, v1.AddStatus](
 			httpClient,
 			baseURL+InventoryServiceDeleteBooksProcedure,
 			opts...,
@@ -91,8 +91,8 @@ func NewInventoryServiceClient(httpClient connect.HTTPClient, baseURL string, op
 // inventoryServiceClient implements InventoryServiceClient.
 type inventoryServiceClient struct {
 	addBooks    *connect.Client[v1.Book, v1.AddStatus]
-	getBooks    *connect.Client[v1.BookID, v1.Book]
-	deleteBooks *connect.Client[v1.BookID, v1.AddStatus]
+	getBooks    *connect.Client[v1.BookTitle, v1.Book]
+	deleteBooks *connect.Client[v1.BookTitle, v1.AddStatus]
 	updateBooks *connect.Client[v1.Book, v1.AddStatus]
 }
 
@@ -102,12 +102,12 @@ func (c *inventoryServiceClient) AddBooks(ctx context.Context, req *connect.Requ
 }
 
 // GetBooks calls book.v1.InventoryService.GetBooks.
-func (c *inventoryServiceClient) GetBooks(ctx context.Context, req *connect.Request[v1.BookID]) (*connect.Response[v1.Book], error) {
+func (c *inventoryServiceClient) GetBooks(ctx context.Context, req *connect.Request[v1.BookTitle]) (*connect.Response[v1.Book], error) {
 	return c.getBooks.CallUnary(ctx, req)
 }
 
 // DeleteBooks calls book.v1.InventoryService.DeleteBooks.
-func (c *inventoryServiceClient) DeleteBooks(ctx context.Context, req *connect.Request[v1.BookID]) (*connect.Response[v1.AddStatus], error) {
+func (c *inventoryServiceClient) DeleteBooks(ctx context.Context, req *connect.Request[v1.BookTitle]) (*connect.Response[v1.AddStatus], error) {
 	return c.deleteBooks.CallUnary(ctx, req)
 }
 
@@ -119,8 +119,8 @@ func (c *inventoryServiceClient) UpdateBooks(ctx context.Context, req *connect.R
 // InventoryServiceHandler is an implementation of the book.v1.InventoryService service.
 type InventoryServiceHandler interface {
 	AddBooks(context.Context, *connect.Request[v1.Book]) (*connect.Response[v1.AddStatus], error)
-	GetBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.Book], error)
-	DeleteBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.AddStatus], error)
+	GetBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.Book], error)
+	DeleteBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.AddStatus], error)
 	UpdateBooks(context.Context, *connect.Request[v1.Book]) (*connect.Response[v1.AddStatus], error)
 }
 
@@ -173,11 +173,11 @@ func (UnimplementedInventoryServiceHandler) AddBooks(context.Context, *connect.R
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("book.v1.InventoryService.AddBooks is not implemented"))
 }
 
-func (UnimplementedInventoryServiceHandler) GetBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.Book], error) {
+func (UnimplementedInventoryServiceHandler) GetBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.Book], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("book.v1.InventoryService.GetBooks is not implemented"))
 }
 
-func (UnimplementedInventoryServiceHandler) DeleteBooks(context.Context, *connect.Request[v1.BookID]) (*connect.Response[v1.AddStatus], error) {
+func (UnimplementedInventoryServiceHandler) DeleteBooks(context.Context, *connect.Request[v1.BookTitle]) (*connect.Response[v1.AddStatus], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("book.v1.InventoryService.DeleteBooks is not implemented"))
 }
 

@@ -12,7 +12,7 @@ type DB struct {
 
 func NewSession() *DB {
 	cluster := gocql.NewCluster("localhost")
-	cluster.Keyspace = "example"
+	cluster.Keyspace = "bookstore"
 	cluster.Consistency = gocql.Quorum
 	session, err := cluster.CreateSession()
 	if err != nil {
